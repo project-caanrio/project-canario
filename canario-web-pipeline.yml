@@ -75,17 +75,10 @@ deploy_staging:
   needs: ["test_container"]
   script:
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" "$CI_REGISTRY" --password-stdin
-
     - RELEASE_TAG="LOv$CI_PIPELINE_IID"
     - echo "Using tag for staging: $RELEASE_TAG"
-
-    # Sett riktig tag inn i staging-stackfila (placeholder <IMAGE_TAG>)
     - sed -i "s|<IMAGE_TAG>|$RELEASE_TAG|g" "$STAGE_STACK_FILE"
-
-    # Kopier til prod-manager
     - scp "$STAGE_STACK_FILE" "$DEPLOY_USER@$DEPLOY_HOST:$STAGE_REMOTE_PATH"
-
-    # Deploy til staging-stack
     - ssh "$DEPLOY_USER@$DEPLOY_HOST" "sudo docker stack deploy -c $STAGE_REMOTE_PATH $STAGE_STACK_NAME"
   environment:
     name: staging
@@ -93,23 +86,15 @@ deploy_staging:
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
 
-
 deploy_production:
   stage: deploy_production
   needs: ["deploy_staging"]
   script:
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" "$CI_REGISTRY" --password-stdin
-
     - RELEASE_TAG="LOv$CI_PIPELINE_IID"
     - echo "Using tag for production: $RELEASE_TAG"
-
-    # Sett riktig tag inn i prod-stackfila (placeholder <IMAGE_TAG>)
     - sed -i "s|<IMAGE_TAG>|$RELEASE_TAG|g" "$PROD_STACK_FILE"
-
-    # Kopier til prod-manager
     - scp "$PROD_STACK_FILE" "$DEPLOY_USER@$DEPLOY_HOST:$PROD_REMOTE_PATH"
-
-    # Deploy til prod-stack
     - ssh "$DEPLOY_USER@$DEPLOY_HOST" "sudo docker stack deploy -c $PROD_REMOTE_PATH $PROD_STACK_NAME"
   environment:
     name: production
