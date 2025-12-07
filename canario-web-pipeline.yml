@@ -70,7 +70,6 @@ deploy_stage:
   script:
     - HUMAN_TAG="LOv$CI_PIPELINE_IID"
     - echo "Bruker image-tag for stage:$HUMAN_TAG"
-    - echo "===DEBUG:Innhold i $STAGE_STACK_FILE==="
     - cat "$STAGE_STACK_FILE"
     - sed -i "s|<IMAGE_TAG>|$HUMAN_TAG|g" "$STAGE_STACK_FILE"
     - scp -o StrictHostKeyChecking=no "$STAGE_STACK_FILE" "$DEPLOY_HOST:$STAGE_REMOTE_PATH"
