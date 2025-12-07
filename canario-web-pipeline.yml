@@ -90,7 +90,7 @@ deploy_prod:
     - *docker_login
 
     - HUMAN_TAG="LOv$CI_PIPELINE_IID"
-    - echo "Bruker image-tag for prod: $HUMAN_TAG"
+    - echo "Bruker image-tag for prod:$HUMAN_TAG"
 
     - sed -i "s|<IMAGE_TAG>|$HUMAN_TAG|g" "$PROD_STACK_FILE"
 
