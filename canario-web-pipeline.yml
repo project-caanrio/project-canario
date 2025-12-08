@@ -75,8 +75,9 @@ deploy_stage:
 
 
 deploy_prod:
-  stage: deploy
-  needs: [test]
+  needs:
+    - deploy_stage
+  when: manual
   environment:
     name: production
     url: "$PROD_URL"
@@ -88,4 +89,4 @@ deploy_prod:
     - ssh -o StrictHostKeyChecking=no "$DEPLOY_HOST" "sudo docker stack deploy -c $PROD_REMOTE_PATH $PROD_STACK_NAME"
 
   rules:
-    - if: '$CI_COMMIT_BRANCH == "main"'
+    - if:'$CI_COMMIT_BRANCH == "main"'
