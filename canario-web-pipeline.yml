@@ -86,4 +86,4 @@ deploy_prod:
     - scp -o StrictHostKeyChecking=no "$PROD_STACK_FILE" "$DEPLOY_HOST:$PROD_REMOTE_PATH"
     - ssh -o StrictHostKeyChecking=no "$DEPLOY_HOST" "sudo docker stack deploy -c $PROD_REMOTE_PATH $PROD_STACK_NAME"
   rules:
-    - if: '$CI_COMMIT_BRANCH == "main"'
+    - if:'$CI_COMMIT_BRANCH == "main"'
