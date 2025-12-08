@@ -75,9 +75,7 @@ deploy_stage:
 
 
 deploy_prod:
-  needs:
-    - deploy_stage
-  when: manual
+  needs: [deploy_stage]
   environment:
     name: production
     url: "$PROD_URL"
